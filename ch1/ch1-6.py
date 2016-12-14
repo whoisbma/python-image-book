@@ -42,11 +42,12 @@ print(im[10,10])
 # slicing returns a view into the array specified by intervals.
 # some examples:
 
-im[i,:] = im[j,:]			# set the values of row i with the values from row j
-im[:,i] = 100				# set all values in column i to 100
-im[:100,:50].sum()		# the sum of all values of the first 100 rows and 50 columns
-im[50:100,50:100]			# rows 50-100, columns 50-100 (not including 100)
-im[i].mean()				# average of row i
-im[:,-1]						# last column
-im[-2,:] # or im[-2]		# second to last row
+
+# im[i,:] = im[j,:]			# set the values of row i with the values from row j
+# im[:,i] = 100				# set all values in column i to 100
+# im[:100,:50].sum()		# the sum of all values of the first 100 rows and 50 columns
+# im[50:100,50:100]			# rows 50-100, columns 50-100 (not including 100)
+# im[i].mean()				# average of row i
+# im[:,-1]						# last column
+# im[-2,:] # or im[-2]		# second to last row
 
