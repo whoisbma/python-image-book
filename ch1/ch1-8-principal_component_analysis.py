@@ -1,34 +1,32 @@
-# Principal Component Analysis
-# useful technique for dimensionality reduction
+# using PCA on font images
+
+# fontimages.zip contains small thumbnail images of the character "a" printed in different fonts and then scanned. Assuming that the filenames of these images are stored in a list, imlist, the principal components can be computed and shown like this: 
 
 from PIL import Image
 from numpy import *
+from pylab import *
+import imtools
+import pca
 
-def pca(X):
-	""" Principal Component Analysis
-		input: X, matrix with training data stored as flattened arrays in rows
-		return: projection matrix (with important dimensions first), variance and mean. """
+imlist = imtools.get_imlist("data/fontimages/", "jpg")
 
-	# get dimensions
-	num_data, dim = X.shape
+im = array(Image.open(imlist[0])) # open one image to get size
+m,n = im.shape[0:2] # get the size of the images
+imnbr = len(imlist) # get the number of images
 
-	# center data
-	mean_X = X.mean(axis=0)
-	X = X - mean_X
+# create matrix to store all flattened images
+immatrix = array([array(Image.open(im)).flatten() for im in imlist], 'f')
 
-	if dim>num_data:
-		# PCA - compact trick used
-		M = dot(X, X.T) # covariance matrix
-		e,EV = linalg.eigh(M) # eigenvalues and #eigenvectors
-		tmp = dot(X.t, EV).T # this is the compact trick
-		V = tmp[::-1] # reverse since last eigenvectors are the ones we want
-		S = sqrt(e)[::-1] # reverse since eigenvalues are in increasing order
-		for i in range(V.shape[1]):
-			V[:,i] /= S
-	else:
-		# PCA - SVD used
-		U,S,V = linalg.svd(X)
-		V = V[:num_data] # only makes sense to return the first num_data
+# perform PCA
+V,S,immean = pca.pca(immatrix)
 
-	# return the projection matrix, the variance and the mean
-	return V,S,mean_X
+# show some images (mean and 7 first modes)
+figure()
+gray()
+subplot(2,4,1)
+imshow(immean.reshape(m,n))
+for i in range(7):
+	subplot(2,4,i+2)
+	imshow(V[i].reshape(m,n))
+
+show()
