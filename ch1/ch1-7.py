@@ -43,3 +43,5 @@ pil_im = Image.fromarray(im)
 
 # if you did some operation to change the type from uint8 to another data type such as im3 or im4 in the example above, you need to convert back before creating the PIL image:
 pil_im = Image.fromarray(uint8(im))
+
+# if you are not absolutely sure of the type, you should always do this as it is the safe choice.
