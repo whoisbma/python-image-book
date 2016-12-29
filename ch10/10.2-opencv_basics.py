@@ -7,7 +7,7 @@ from numpy import *
 # use this as an alternative to the PIL image
 im = cv2.imread('images/pug.jpg')
 h,w = im.shape[:2]
-print h,w
+print h, w
 
 # imwrite() takes care of any conversion
 cv2.imwrite('result.png', im)
