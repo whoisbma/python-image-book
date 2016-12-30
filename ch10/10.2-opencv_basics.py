@@ -1,81 +1,66 @@
+# READING AND WRITING IMAGES
+
 import cv2
-from numpy import *
+from pylab import *
 
-# reading and writing images
-
-# imread() returns the image as a standard numpy array
-# use this as an alternative to the PIL image
+# read image
 im = cv2.imread('images/pug.jpg')
 h,w = im.shape[:2]
 print h, w
 
-# imwrite() takes care of any conversion
-cv2.imwrite('result.png', im)
+# save image
+cv2.imwrite('resulting pug.png',im)
+
+# imread() returns the image as a standard NumPy array and can handle a wide range of image formats. You can use this function as an alternative to the PIL image reading.
+
+# imwrite() automatically takes care of any conversion based on the file ending.
 
 
-# color spaces
 
-# in openCV images are stored in BGR order (backwards)
-# when reading an image the default is BGR but there are conversions available
-# color space conversions are done using cvtColor()
+# COLOR SPACES
 
-# converting to greyscale:
-im = cv2.imread('images/pug.jpg')
-gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+# in openCV images are not stored using RGB channels, they are stored in BGR order. When reading an image the default is BGR, however there are several conversions available. Color space conversions are done using cvtColor().
 
+# converting to grayscale
+grayPug = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+cv2.imwrite('graypug.png', grayPug)
+
+# others:
+# cv2.COLOR_BGR2GRAY
 # cv2.COLOR_BGR2RGB
 # cv2.COLOR_GRAY2BGR
 
-cv2.imwrite('gray.png', gray)
+# the last version converts grayscale to BGR and is useul if you want to plot or overlay colored objects on the images.
 
 
-# displaying images and results 
 
-# create an integral image representation:
-intim = cv2.integral(gray)
+# DISPLAYING IMAGES AND RESULTS
 
-# normalize and save:
-intim = (255.0*intim) / intim.max()
-cv2.imwrite("intim.png", intim)
+# compute integral image
+intim = cv2.integral(grayPug)
 
-# after reading the image and converting to grayscale, integral() creates an image where the value at each pixel is the sum of the intensities above and to the left.
-# this is a very useful trick for quickly evaluating features.
-# integral images are used in openCV's cascadeClassifier, which is based on a framework introduced by Viola and Jones.
-# before saving the resultimg image, we normalize the values to 0...255 by dividing with the largest value.
+# normalize and save
+intim = (255.0 * intim) / intim.max()
+cv2.imwrite('intim.png', intim)
+
+# integral() creates an image where the value at each pixel is the sum of the intensities above and to the left. this is a very useful trick for quickly evaluating features. integral images are used in openCV's cascade classifier which is based on a framework introduced by Viola and Jones.
+
+# before saving the resulting image, we normalize the values to 0...255 by dividing with the largest value.
 
 
-# flood fill starting from a seed pixel:
+
+
+# FLOOD FILL
+
 diff = (6,6,6)
-mask = zeros((h+2,w+2), uint8)
-cv2.floodFill(im, mask, (10,10), (255,255,0), diff, diff)
+mask = zeros((h+2,w+2),uint8)
+cv2.floodFill(im,mask,(10,10),(255,255,0),diff,diff)
 
-# show the result in an openCV window:
-cv2.imshow('flood fill', im)
+# show the result in an openCV window
+cv2.imshow('floodfill', im)
 cv2.waitKey()
 
-# save the result:
-cv2.imwrite('floodfill.jpg', im)
+# save the result
+cv2.imwrite('floodfill result.jpg', im)
 
-
-# Extracting SURF features
-
-im = cv2.imread('images/pug.jpg')
-
-# downsample:
-im_lowres = cv2.pyrDown(im)
-
-# convert to grayscale:
-gray = cv2.cvtColor(im_lowres, cv2.COLOR_RGB2GRAY)
-
-# detect feature points
-# s = cv2.SURF()
-# mask = uint8(ones(gray.shape))
-# keypoints = s.detect(gray, mask)
-
-# # show image and points
-# vis = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
-# for k in keypoints[::10]:
-# 	cv2.circle(vis,(int(k.pt[0]), int(k.pt[1])),2,(0,255,0),-1)
-# 	cv2.circle(vis,(int(k.pt[0]), int(k.pt[1])), int(k.size), (0,255,0), 2)
-# cv2.imshow('local descriptors', vis)
-# cv2.waitKey()
+# the example applies flood fill to the image and shows the result in an OpenCV window. waitKey() pauses until a key is pressed and the window is automatically closed. Here the function floodFill() takes the image (grayscale or color), a mask with non-zero pixels indicating areas not to be filled, a seed pixel, the new color value to replace the tflooded pixels together with lower and upper difference thresholds to accept new pixels. the difference thesholds are given as tuples (R,G,B).
