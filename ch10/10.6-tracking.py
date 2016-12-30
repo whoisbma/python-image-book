@@ -49,3 +49,16 @@ while True:
 	cv2.imshow('Optical Flow', draw_flow(gray, flow))
 	if cv2.waitKey(10) == 27:
 		break
+
+# this example will capture images from a webcam and call the optical flow estimation on every consecutive pair of images. the motion flow vectors are stored int the two-channel image flow returned by calcOpticalFlowFarneback().
+
+# the helper function draw_flow() plots the motion vectors at regularly sampled points in the image. it uses line() and circle() and the variable step controls the spacing of the flow samples. 
+
+
+
+# THE LUCAS-KANADE ALGORITHM
+
+# tracking is the process of following objects through a sequence of images or video. the most basic form of tracking is to follow interest points such as corners. a popular algorithm for this is the Lucas-Kanade tracking algorithm which uses a sparse optical flow algorithm.
+
+# lk tracking can be applied to any type of features but usually makes use of corner points similar to the harris corner points in 2.1.
+
